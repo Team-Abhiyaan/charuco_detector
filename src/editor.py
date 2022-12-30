@@ -7,7 +7,7 @@ with open(r'data.yml') as file:
     pose = yaml.unsafe_load(file)
 
 
-with open(r'virat_template.launch', 'r') as file:
+with open(r'~/Bolt-Drive-by-Wire/rosserial_ws/bolt_bringup/launch/zed/zed_template.launch', 'r') as file:
   
     # Reading the content of the file
     # using the read() function and storing
@@ -22,7 +22,7 @@ with open(r'virat_template.launch', 'r') as file:
     data = data.replace("$@camr$@", str(pose['cam_roll']))
     data = data.replace("$@camp$@", str(pose['cam_pitch']))
     data = data.replace("$@camw$@", str(pose['cam_yaw']))
-with open(r'virat2.launch', 'w') as file:
+with open(r'~/Bolt-Drive-by-Wire/rosserial_ws/bolt_bringup/launch/zed/zed2i_no_tf.launch', 'w') as file:
   
     # Writing the replaced data in our
     # text file
