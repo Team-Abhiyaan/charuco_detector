@@ -37,7 +37,7 @@ class DataAnalyzer:
         tx = msg.pose.position.x-x_axis
         ty = msg.pose.position.y-y_axis
         tz = msg.pose.position.z-z_axis
-
+        t=(tx,ty,tz)
         roll = 0
         pitch = 0
         yaw = 0
@@ -57,6 +57,12 @@ class DataAnalyzer:
         TA2B = np.linalg.inv(TB2A)
         q = tr.quaternion_from_matrix(TA2B)
         (q_roll, q_pitch, q_yaw) = euler_from_quaternion(q)
+        q_roll = float("{:.4f}".format(q_roll))
+        q_pitch = float("{:.4f}".format(q_pitch))
+        q_yaw = float("{:.4f}".format(q_yaw))
+        tx = float("{:.4f}".format(tx))
+        ty = float("{:.4f}".format(ty))
+        tz = float("{:.4f}".format(tz))
 
         battery_pose = PoseStamped()
         battery_pose.header.seq = 1
@@ -68,7 +74,7 @@ class DataAnalyzer:
         battery_pose.pose.position.z = tz
 
         battery_pose.pose.orientation = q
-        self.pose = 2
+        self.pose = 1
         print(battery_pose)
 
         dict = {
@@ -83,7 +89,7 @@ class DataAnalyzer:
         with open('data.yml', 'w') as outfile:
             yaml.dump(dict, outfile, default_flow_style=False)
 
-        self.pub.publish(battery_pose)
+        self.pub.publish(dict)
 
         # tranfm=np.transpose(TA2B)
         # print("translation vectors x,y,z are",tranfm[3])
@@ -97,7 +103,8 @@ class DataAnalyzer:
 # when ctrl-C, save the last values on yaml
 
 d = DataAnalyzer()
-d.run()
+if __name__ == '__main__':
+    d.run()
 
 # TB2A=matrix(pose)
 
