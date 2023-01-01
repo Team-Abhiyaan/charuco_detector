@@ -1,0 +1,49 @@
+<launch>
+    <arg name="sensor_bringup" default="true"/>
+    <arg name="localization_bringup" default="false"/>
+    <arg name="rviz" default="true"/>
+
+    <arg name="zed2i" default="true"/>
+    <arg name="imu" default="true"/>
+    <arg name="ada_imu" default="true"/>
+    <arg name="gps" default="false"/>
+
+
+    <group if="$(arg sensor_bringup)"> <!-- Sensor Bringup -->
+        <!-- Transforms -->
+        <param name="robot_description" textfile="$(find drivers_bringup)/urdf/test_setup.urdf"/>
+
+
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub">
+        </node>
+    </group>
+    <!--<node pkg="rviz" type="rviz" args="-d $(find drivers_bringup)/rviz/actual.rviz" name="localization_rviz"
+          if="$(arg rviz)"/>-->
+
+
+    <group if="$(arg sensor_bringup)"> <!-- Sensor Bringup -->
+
+        <machine user="jetson" address="192.168.0.6" env-loader="/home/jetson/ws/devel/env.sh" name="jetson"
+                 default="true"/>
+
+        <include file="$(find drivers_bringup)/launch/zed/zed2i_no_tf.launch" if="$(arg zed2i)">
+            <arg name="camera_name" default="zed2i"/> <!-- The name you want -->
+            <arg name="camera_model" default="zed2i"/>
+            <arg name="cam_pos_x" default="0.91"/>
+            <arg name="cam_pos_y" default="0.00"/>
+            <arg name="cam_pos_z" default="1.565"/>
+            <arg name="cam_roll" default="0"/>
+            <arg name="cam_pitch" default="0.296706"/>
+            <arg name="cam_yaw" default="0.0"/>
+        </include>
+
+    </group>
+    <launch>
+        <include file="$(find charuco_detector)/launch/charuco_detector.launch" />
+    </launch>
+    <node pkg="charuco_detector" name="transform.py" type="transform.py" output="screen">
+    </node>
+    
+
+
+</launch>
